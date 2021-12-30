@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MailDeliveryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="EmailLabel">
+          <Key>
+            <PropertyRef Name="EmailLabel_Id" />
+          </Key>
+          <Property Name="EmailLabel_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Email_Id" Type="int" />
+          <Property Name="Label_Id" Type="int" />
+        </EntityType>
+        <EntityType Name="Emails">
+          <Key>
+            <PropertyRef Name="Email_Id" />
+          </Key>
+          <Property Name="Email_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EmailAddressTo" Type="varchar(max)" />
+          <Property Name="Subject" Type="varchar(max)" />
+          <Property Name="FolderId" Type="int" />
+          <Property Name="CapturedDate" Type="datetime" />
+          <Property Name="EmailAddressFrom" Type="varchar(max)" />
+          <Property Name="Url" Type="varchar(max)" />
+          <Property Name="Status" Type="bit" />
+          <Property Name="ErrorMsg" Type="varchar(max)" />
+          <Property Name="Message" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Folders">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Label">
+          <Key>
+            <PropertyRef Name="Label_Id" />
+          </Key>
+          <Property Name="Label_Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LabelName" Type="varchar" MaxLength="255" />
+          <Property Name="CapturedDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="SmtpDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SmtpHost" Type="varchar" MaxLength="100" />
+          <Property Name="SmtpPort" Type="int" />
+        </EntityType>
+        <EntityContainer Name="MailDeliveryModelStoreContainer">
+          <EntitySet Name="EmailLabel" EntityType="Self.EmailLabel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Emails" EntityType="Self.Emails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Folders" EntityType="Self.Folders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Label" EntityType="Self.Label" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SmtpDetail" EntityType="Self.SmtpDetail" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MailDeliveryModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="EmailLabel">
+          <Key>
+            <PropertyRef Name="EmailLabel_Id" />
+          </Key>
+          <Property Name="EmailLabel_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Email_Id" Type="Int32" />
+          <Property Name="Label_Id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Email">
+          <Key>
+            <PropertyRef Name="Email_Id" />
+          </Key>
+          <Property Name="Email_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EmailAddressTo" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Subject" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="FolderId" Type="Int32" />
+          <Property Name="CapturedDate" Type="DateTime" Precision="3" />
+          <Property Name="EmailAddressFrom" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Url" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="Boolean" />
+          <Property Name="ErrorMsg" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Message" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Folder">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Label">
+          <Key>
+            <PropertyRef Name="Label_Id" />
+          </Key>
+          <Property Name="Label_Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LabelName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="CapturedDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityContainer Name="MailDeliveryEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="EmailLabels" EntityType="Self.EmailLabel" />
+          <EntitySet Name="Emails" EntityType="Self.Email" />
+          <EntitySet Name="Folders" EntityType="Self.Folder" />
+          <EntitySet Name="Labels" EntityType="Self.Label" />
+          <EntitySet Name="SmtpDetails" EntityType="MailDeliveryModel.SmtpDetail" />
+        </EntityContainer>
+        <EntityType Name="SmtpDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SmtpHost" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SmtpPort" Type="Int32" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MailDeliveryModelStoreContainer" CdmEntityContainer="MailDeliveryEntities">
+          <EntitySetMapping Name="EmailLabels">
+            <EntityTypeMapping TypeName="MailDeliveryModel.EmailLabel">
+              <MappingFragment StoreEntitySet="EmailLabel">
+                <ScalarProperty Name="EmailLabel_Id" ColumnName="EmailLabel_Id" />
+                <ScalarProperty Name="Email_Id" ColumnName="Email_Id" />
+                <ScalarProperty Name="Label_Id" ColumnName="Label_Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Emails">
+            <EntityTypeMapping TypeName="MailDeliveryModel.Email">
+              <MappingFragment StoreEntitySet="Emails">
+                <ScalarProperty Name="Email_Id" ColumnName="Email_Id" />
+                <ScalarProperty Name="EmailAddressTo" ColumnName="EmailAddressTo" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="FolderId" ColumnName="FolderId" />
+                <ScalarProperty Name="CapturedDate" ColumnName="CapturedDate" />
+                <ScalarProperty Name="EmailAddressFrom" ColumnName="EmailAddressFrom" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ErrorMsg" ColumnName="ErrorMsg" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Folders">
+            <EntityTypeMapping TypeName="MailDeliveryModel.Folder">
+              <MappingFragment StoreEntitySet="Folders">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Labels">
+            <EntityTypeMapping TypeName="MailDeliveryModel.Label">
+              <MappingFragment StoreEntitySet="Label">
+                <ScalarProperty Name="Label_Id" ColumnName="Label_Id" />
+                <ScalarProperty Name="LabelName" ColumnName="LabelName" />
+                <ScalarProperty Name="CapturedDate" ColumnName="CapturedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SmtpDetails">
+            <EntityTypeMapping TypeName="MailDeliveryModel.SmtpDetail">
+              <MappingFragment StoreEntitySet="SmtpDetail">
+                <ScalarProperty Name="SmtpPort" ColumnName="SmtpPort" />
+                <ScalarProperty Name="SmtpHost" ColumnName="SmtpHost" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
