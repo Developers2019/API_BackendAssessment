@@ -6,9 +6,16 @@ using System.Net.Http;
 using System.Web.Http;
 using API_BackendAssessment.Models;
 using API_BackendAssessment.EmailServices;
+using API_BackendAssessment.Helpers;
+using Microsoft.AspNet.Identity;
+using System.Web;
+using System.Threading;
+using System.Security.Claims;
+using Microsoft.AspNet.Identity.Owin;
+
 namespace API_BackendAssessment.Controllers
 {
-   
+  
     [RoutePrefix("api/mail")]
     public class MailDeliveryController : ApiController
     {
@@ -21,8 +28,9 @@ namespace API_BackendAssessment.Controllers
             {
                 if (model != null)
                 {
-                    var status = EmailServices.EmailServices.SendEmail(model.EmailAddressToMany, model.EmailAddressFrom, model.Subject, model.Message, new List<System.Net.Mail.Attachment>());
-                    return Ok($"message sent: {YesNo(status)}");
+                    model.EmailAddressFrom = "mpucukondlazi@gmail.com";
+                    var status = EmailServices.EmailServices.SendEmail(model.EmailAddressTo, model.EmailAddressFrom, model.Subject, model.Message, new List<System.Net.Mail.Attachment>());
+                    return Ok($"message sent: {Helper.YesNo(status)}");
 
                 }
                 return Ok($"message sent: No");
@@ -38,12 +46,116 @@ namespace API_BackendAssessment.Controllers
         }
         
         [HttpGet]
+        [Route("getlabels")]
+        public IHttpActionResult GetLabels()
+        {
+            try
+            {
+                var labels = MailDeliveryModel.GetLabels();
+                return Ok(labels);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.ToString());
+            }
+          
+               
+        } 
+
+        [HttpGet]
         [Route("getemail")]
-        public IHttpActionResult GetEmail()
+        public IHttpActionResult GetEmails()
         {
             try
             {
                 var emails = MailDeliveryModel.GetAllEmails();
+                return Ok(emails);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.ToString());
+            }
+          
+               
+        } 
+
+        [HttpGet]
+        [Route("getemailcount")]
+        public IHttpActionResult GetEmailCount()
+        {
+            try
+            {
+                var email = "mpucukondlazi@gmail.com";
+                var emails = MailDeliveryModel.GetInboxEmails(email).Count;
+                return Ok(emails);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.ToString());
+            }
+          
+               
+        } 
+
+        [HttpGet]
+        [Route("getinboxemail")]
+        public IHttpActionResult GetInboxEmail()
+        {
+            try
+            {
+                
+                var xx = RequestContext.Principal.Identity.GetUserName();
+
+
+                var email = "mpucukondlazi@gmail.com";
+                List<EmailViewModel> emails = MailDeliveryModel.GetInboxEmails(email);
+
+               
+                return Ok(emails);
+
+                
+                
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.ToString());
+            }
+          
+               
+        }
+        
+        [HttpGet]
+        [Route("getsentemail")]
+        public IHttpActionResult GetSentEmail()
+        {
+            try
+            {
+                //var email = "ndlazim1@ukzn.ac.za";
+                var email = "mpucukondlazi@gmail.com";
+
+                var emails = MailDeliveryModel.GetSentEmails(email);
+                return Ok(emails);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.ToString());
+            }
+          
+               
+        } 
+
+        [HttpGet]
+        [Route("reademail/{id}")]
+        public IHttpActionResult GetEmailById(int id)
+        {
+            try
+            {
+                var emails = MailDeliveryModel.GetAllEmails().Where(x=>x.Email_Id == id).FirstOrDefault();
                 return Ok(emails);
             }
             catch (Exception ex)
@@ -83,10 +195,10 @@ namespace API_BackendAssessment.Controllers
                 var status = MailDeliveryModel.MoveToTrash(id);
                 if (status)
                 {
-                    return Ok($"Moved to trash: {YesNo(status)}");
+                    return Ok($"Moved to trash: {Helper.YesNo(status)}");
 
                 }
-                return Ok($"Moved to trash: {YesNo(status)}");
+                return Ok($"Moved to trash: {Helper.YesNo(status)}");
             }
             catch (Exception ex)
             {
@@ -106,10 +218,10 @@ namespace API_BackendAssessment.Controllers
                 var status = MailDeliveryModel.MoveToInbox(id);
                 if (status)
                 {
-                    return Ok($"Moved to Inbox: {YesNo(status)}");
+                    return Ok($"Moved to Inbox: {Helper.YesNo(status)}");
 
                 }
-                return Ok($"Moved to Inbox: {YesNo(status)}");
+                return Ok($"Moved to Inbox: {Helper.YesNo(status)}");
             }
             catch (Exception ex)
             {
@@ -129,10 +241,10 @@ namespace API_BackendAssessment.Controllers
                 var status = MailDeliveryModel.CreateLabel(label);
                 if (status)
                 {
-                    return Ok($"Label created: {YesNo(status)}");
+                    return Ok($"Label created: {Helper.YesNo(status)}");
 
                 }
-                return Ok($"Label created: {YesNo(status)}");
+                return Ok($"Label created: {Helper.YesNo(status)}");
             }
             catch (Exception ex)
             {
@@ -152,10 +264,10 @@ namespace API_BackendAssessment.Controllers
                 var status = MailDeliveryModel.DeleteLabel(id);
                 if (status)
                 {
-                    return Ok($"Label deleted: {YesNo(status)}");
+                    return Ok($"Label deleted: {Helper.YesNo(status)}");
 
                 }
-                return Ok($"Label deleted: {YesNo(status)}");
+                return Ok($"Label deleted: {Helper.YesNo(status)}");
             }
             catch (Exception ex)
             {
@@ -167,18 +279,21 @@ namespace API_BackendAssessment.Controllers
         }
 
         [HttpPost]
-        [Route("addlabel/{id}/{labelId}")]
+        [Route("addlabel/{id}")]
         public IHttpActionResult AddLabelToEmail(int id,int labelId)
         {
             try
             {
-                var status = MailDeliveryModel.AddLabelToEmail(id, labelId);
-                if (status)
-                {
-                    return Ok($"Label added to email: {YesNo(status)}");
+                var status = false;
+               
+                    status = MailDeliveryModel.AddLabelToEmail(id, labelId);
+                    if (status)
+                    {
+                        return Ok($"Label added to email: {Helper.YesNo(status)}");
 
-                }
-                return Ok($"Label added to email: {YesNo(status)}");
+                    }
+                
+                return Ok($"Label added to email: {Helper.YesNo(status)}");
             }
             catch (Exception ex)
             {
@@ -191,17 +306,17 @@ namespace API_BackendAssessment.Controllers
 
         [HttpPost]
         [Route("removelabel/{id}")]
-        public IHttpActionResult RemoveLabelToEmail(int id)
+        public IHttpActionResult RemoveLabelFromEmail(int id)
         {
             try
             {
                 var status = MailDeliveryModel.RemoveLabelFromEmail(id);
                 if (status)
                 {
-                    return Ok($"Moved to trash: {YesNo(status)}");
+                    return Ok($"Moved to trash: {Helper.YesNo(status)}");
 
                 }
-                return Ok($"Moved to trash: {YesNo(status)}");
+                return Ok($"Moved to trash: {Helper.YesNo(status)}");
             }
             catch (Exception ex)
             {
@@ -237,9 +352,6 @@ namespace API_BackendAssessment.Controllers
         }
 
 
-        public string YesNo(bool answer)
-        {
-            return answer ? "Yes" : "No";
-        }
+      
     }
 }

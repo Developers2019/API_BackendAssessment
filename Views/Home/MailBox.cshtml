@@ -16,7 +16,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-3">
-                <a href="compose.html" class="btn btn-primary btn-block mb-3">Compose</a>
+                <button class="btn btn-primary btn-block mb-3" data-toggle="modal" data-target="#modal-compose">Compose</button>
                 <div class="card">
                     <div class="card-header">
                         <h3 class="card-title">Folders</h3>
@@ -29,18 +29,18 @@
                     <div class="card-body p-0">
                         <ul class="nav nav-pills flex-column">
                             <li class="nav-item active">
-                                <a href="#" class="nav-link">
+                                <a href="#" class="nav-link" onclick="LoadEmails();">
                                     <i class="fas fa-inbox"></i> Inbox
-                                    <span class="badge bg-primary float-right">12</span>
+                                    <span class="badge bg-primary float-right" id="inboxCount"></span> 
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="#" class="nav-link" onclick="LoadSentEmails();">
                                     <i class="far fa-envelope"></i> Sent
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="#" class="nav-link">
+                                <a href="#" class="nav-link" onclick="LoadTrashedEmails();">
                                     <i class="far fa-trash-alt"></i> Trash
                                 </a>
                             </li>
@@ -60,25 +60,7 @@
                         </div>
                     </div>
                     <div class="card-body p-0">
-                        <ul class="nav nav-pills flex-column">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="far fa-circle text-danger"></i>
-                                    Important
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="far fa-circle text-warning"></i> Promotions
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    <i class="far fa-circle text-primary"></i>
-                                    Social
-                                </a>
-                            </li>
-                        </ul>
+                        <span id="labels"></span>
                     </div>
                     <!-- /.card-body -->
                 </div>
@@ -88,8 +70,7 @@
             <div class="col-md-9">
                 <div class="card card-primary card-outline">
                     <div class="card-header">
-                        <h3 class="card-title">Inbox</h3>
-
+                        <h3 class="card-title"><span id="title"></span></h3>
                         <div class="card-tools">
                             <div class="input-group input-group-sm">
                                 <input type="text" class="form-control" placeholder="Search Mail">
@@ -105,36 +86,18 @@
                     <!-- /.card-header -->
                     <div class="card-body p-0">
                         <div class="mailbox-controls">
-                            <!-- Check all button -->
-                            <button type="button" class="btn btn-default btn-sm checkbox-toggle">
-                                <i class="far fa-square"></i>
-                            </button>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-sm"><i class="far fa-trash-alt"></i></button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-reply"></i></button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i></button>
+                             <div class="btn-group">
+                                <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal-Label"><i class="fas fa-plus"></i></button>
+                               
                             </div>
-                            <!-- /.btn-group -->
-                            <button type="button" class="btn btn-default btn-sm"><i class="fas fa-sync-alt"></i></button>
-                            <div class="float-right">
-                                1-50/200
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fas fa-chevron-right"></i></button>
-                                </div>
-                                <!-- /.btn-group -->
-                            </div>
-                            <!-- /.float-right -->
-                        </div>
+                         </div>
                         <div class="table-responsive mailbox-messages">
                             <table id="grid" class="table table-hover table-striped">
                                 <thead>
                                 </thead>
                                 <tbody id="bd">
                                     <tr>
-
                                     </tr>
-
                                 </tbody>
                             </table>
                             <!-- /.table -->
@@ -144,26 +107,12 @@
                     <!-- /.card-body -->
                     <div class="card-footer p-0">
                         <div class="mailbox-controls">
-                            <!-- Check all button -->
-                            <button type="button" class="btn btn-default btn-sm checkbox-toggle">
-                                <i class="far fa-square"></i>
-                            </button>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-sm"><i class="far fa-trash-alt"></i></button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-reply"></i></button>
-                                <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i></button>
-                            </div>
+                             @*<div class="btn-group"> 
+                                <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal-Label" title="Add Label"><i class="fas fa-plus"></i></button>
+                            </div>*@
                             <!-- /.btn-group -->
-                            <button type="button" class="btn btn-default btn-sm"><i class="fas fa-sync-alt"></i></button>
-                            <div class="float-right">
-                                1-50/200
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fas fa-chevron-left"></i></button>
-                                    <button type="button" class="btn btn-default btn-sm"><i class="fas fa-chevron-right"></i></button>
-                                </div>
-                                <!-- /.btn-group -->
-                            </div>
-                            <!-- /.float-right -->
+                            @*<button type="button" class="btn btn-default btn-sm"><i class="fas fa-sync-alt"></i></button>*@
+                            
                         </div>
                     </div>
                 </div>
@@ -173,20 +122,161 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modal-compose" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Compose New Message</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="CloseComposeModal();">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="card card-secondary">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <input class="form-control" placeholder="To:" id="to">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Subject:" id="subject">
+                        </div>
+                        <div class="form-group">
+                            <textarea id="compose-textarea" class="form-control" style="height: 322.667px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                         <div class="float-right">
+                            <button type="submit" class="btn btn-primary" onclick="SendEmail();"><i class="far fa-envelope"></i> Send</button>
+                        </div>
+                        <button type="reset" class="btn btn-default" data-dismiss="modal" onclick="CloseComposeModal();"><i class="fas fa-times"></i> Discard</button>
+                    </div>
+                </div>
+            </div>
+          
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal-addlabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Label To Email</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="CloseComposeModal();">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="card card-secondary">
+                    <div class="card-body">
+                        <div class="form-group">
+                            
+                            <span><select id="labelDisplay" onchange="ddListChange();" class="form-control select2" style="width: 50%;" multiple="multiple" data-mdb-filter="true"><option value="">Select...</option></select></span>
+                            
+                        </div>
+                      
+                    </div>
+                    <div class="card-footer">
+                         <div class="float-right">
+                             <span id="btnLabel"></span>
+                        </div>
+                        <button type="reset" class="btn btn-default" data-dismiss="modal" onclick="CloseComposeModal();"><i class="fas fa-times"></i> Discard</button>
+                    </div>
+                </div>
+            </div>
+          
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" id="modal-Label" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Create Label</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="CloseLabelModal();">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="card card-secondary">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <input class="form-control" placeholder="LabelName:" id="txtLabel">
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                         <div class="float-right">
+                            <button type="submit" class="btn btn-primary" onclick="CreateLabel();"> Submit</button>
+                        </div>
+                        <button type="reset" class="btn btn-default" data-dismiss="modal" onclick="CloseLabelModal();"><i class="fas fa-times"></i> Close</button>
+                    </div>
+                </div>
+            </div>
+          
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+<div class="modal fade" id="modal-read" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Read Mail</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="ClosePreview();" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="card card-secondary">
+                    <div class="card-body p-0">
+                        <div class="mailbox-read-info">
+                            @*<h5>Message Subject Is Placed Here</h5>*@
+                            <h5><span id="sub"></span></h5>
+                            <h6>
+                                <span id="from"></span>
+                                <span class="mailbox-read-time float-right" id="date"></span>
+                            </h6>
+                        </div>
+                        <div class="mailbox-controls with-border text-center">
+                            <div class="btn-group">
+                                <span id="btnDelete"></span>
+                                <span id="btnRecover"></span>
+                                <span id="btnTag"></span>
+                            </div>
+                            <!-- /.btn-group -->
+                         </div>
+                        <!-- /.mailbox-controls -->
+                        <div class="mailbox-read-message">
+                           <span id="message"></span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span id="btnDelete"></span>
+                    </div>
+                </div>
+            </div>
+          
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+
+
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
-@*<script src="~/jquery.bootgrid-1.3.1/jquery.bootgrid.js"></script>*@
 <script src="~/CustomScripts/MailBox.js"></script>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#grid').DataTable({
-            dom: 'Bfrtip',
-            "pageLength": 10,
-            "ordering": false,
-            "language": {
-                "emptyTable": "No records found"
-            }
-        });
-    });
-
-</script>
+<script src="~/CustomScripts/main.js"></script>

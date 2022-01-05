@@ -20,7 +20,7 @@ namespace API_BackendAssessment.EmailServices
         /// <param name="body"></param>
         /// <param name="attachments"></param>
         /// <returns></returns>
-        public static bool SendEmail(string [] destination, string emailFrom,string subject, string body, List<Attachment> attachments)
+        public static bool SendEmail(string destination, string emailFrom,string subject, string body, List<Attachment> attachments)
         {
             Helper.SecurityProtocolTypes();
             bool status;
@@ -31,8 +31,8 @@ namespace API_BackendAssessment.EmailServices
               
                 MailMessage message = new MailMessage { From = new MailAddress(emailFrom) };
 
-                //List<string> destinations = destination.Split(',').ToList();
-                foreach (string dest in destination)
+                List<string> destinations = destination.Split(',').ToList();
+                foreach (string dest in destinations)
                 {
                     message.To.Add(new MailAddress(dest));
                 }
@@ -54,12 +54,10 @@ namespace API_BackendAssessment.EmailServices
 
                 status = true;
 
-                foreach (var x in destination)
+                foreach (string dest in destinations)
                 {
-                    MailDeliveryModel.AddEmail(new EmailViewModel { EmailAddressFrom = emailFrom, EmailAddressTo = x, Subject = subject, Message = body, Status = status });
-
+                    MailDeliveryModel.AddEmail(new EmailViewModel { EmailAddressFrom = emailFrom, EmailAddressTo = dest, Subject = subject, Message = body, Status = status });
                 }
-
 
                 return status;
             }
@@ -67,7 +65,7 @@ namespace API_BackendAssessment.EmailServices
             {
                 var message = ex.ToString();
                 status = false;
-                //MailDeliveryModel.AddEmail(new EmailViewModel { EmailAddressFrom = emailFrom, EmailAddressTo = destination, Subject = subject, Message = body, Status = status, ErrorMsg = message });
+                MailDeliveryModel.AddEmail(new EmailViewModel { EmailAddressFrom = emailFrom, EmailAddressTo = destination, Subject = subject, Message = body, Status = status, ErrorMsg = message });
                 return status;
             }
 

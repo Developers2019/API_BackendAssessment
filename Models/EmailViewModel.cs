@@ -1,4 +1,5 @@
-﻿using System;
+﻿using API_BackendAssessment.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -13,6 +14,29 @@ namespace API_BackendAssessment.Models
         public string Subject { get; set; }
         public int? FolderId { get; set; }
         public DateTime? CapturedDate { get; set; }
+
+        public string HowLongAgo { get 
+            {
+                return Helper.HowLongAgo(CapturedDate.GetValueOrDefault());
+            } 
+        } 
+
+        public string Description { get 
+            {
+                return $"{Subject} - {Helper.LimitText(Message,65)}";
+            } 
+        } 
+        public string DisplayDate { get 
+            {
+                return CapturedDate.GetValueOrDefault().ToString("dddd, dd MMMM yyyy");
+            } 
+        } 
+
+        public string HTMLBody { get 
+            {
+                return Helper.ConvertToHTML(Message);
+            } 
+        }
         public string EmailAddressFrom { get; set; }
         public string Url { get; set; }
         public bool? Status { get; set; }

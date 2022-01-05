@@ -42,7 +42,7 @@ namespace API_BackendAssessment.Models
 
         public static List<EmailViewModel> GetSentEmails(string emailFrom)
         {
-            return GetAllEmails().Where(x => x.EmailAddressFrom.Contains(emailFrom)).OrderByDescending(x => x.CapturedDate).ToList();
+            return GetAllEmails().Where(x => x.EmailAddressFrom.Contains(emailFrom) && x.FolderId == Convert.ToInt32(eNums.EmailFolders.Sent)).OrderByDescending(x => x.CapturedDate).ToList();
 
         } 
         public static List<EmailViewModel> GetTrashedEmails(string emailTo)
@@ -68,7 +68,7 @@ namespace API_BackendAssessment.Models
                 {
                     EmailAddressFrom = model.EmailAddressFrom,
                     EmailAddressTo = model.EmailAddressTo,
-                    FolderId = Convert.ToInt32(eNums.EmailFolders.Inbox),
+                    FolderId = Convert.ToInt32(eNums.EmailFolders.Sent),
                     Subject = model.Subject,
                     CapturedDate = DateTime.Now,
                     Message = model.Message,
@@ -119,7 +119,7 @@ namespace API_BackendAssessment.Models
 
                     if (currentEmail != null)
                     {
-                        currentEmail.FolderId = Convert.ToInt32(eNums.EmailFolders.Inbox);
+                        //currentEmail.FolderId = Convert.ToInt32(eNums.EmailFolders.Inbox);
                         db.Entry(currentEmail).State = System.Data.Entity.EntityState.Modified;
                         db.SaveChanges();
 
@@ -141,23 +141,48 @@ namespace API_BackendAssessment.Models
         
         public static bool CreateLabel(LabelViewModel model)
         {
-            using (MailDeliveryEntities db = new MailDeliveryEntities())
+            try
+            {
+                using (MailDeliveryEntities db = new MailDeliveryEntities())
+                {
+                   
+                    var obj = db.Labels.Add(new Label { LabelName = model.LabelName, CapturedDate = DateTime.Now});
+                    db.SaveChanges();
+
+                    if (obj != null)
+                    {
+                        return true;
+
+                    }
+                    return false;
+                }
+            }
+            catch (Exception)
             {
 
-                var label = new Label
-                {
-                    LabelName = model.LabelName
-                };
-                var obj = db.Labels.Add(label);
-                db.SaveChanges();
-
-                if (obj != null)
-                {
-                    return true;
-
-                }
                 return false;
             }
+           
+        }  
+        public static List<LabelViewModel> GetLabels()
+        {
+            try
+            {
+                using (MailDeliveryEntities db = new MailDeliveryEntities())
+                {
+                    List<LabelViewModel> labels = db.Labels.Select(x => new LabelViewModel() { Label_Id = x.Label_Id, LabelName = x.LabelName }).ToList();
+
+
+                    return labels;
+                   
+                }
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+           
         } 
         public static bool DeleteLabel(int id)
         {
@@ -266,7 +291,7 @@ namespace API_BackendAssessment.Models
             }
         }
 
-      
+   
 
     }
 }
