@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity
 @if (Request.IsAuthenticated)
 {
-  
+
     <li class="nav-item">
         @Html.ActionLink("Welcome " + User.Identity.GetUserName() + "!", "", "", routeValues: null, htmlAttributes: new { title = "Manage", @class = "nav-link" })
     </li>
@@ -17,10 +17,21 @@ else
 
 }
 <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script src="~/CustomScripts/main.js"></script>
+
 <script type="text/javascript">
     function Logout() {
-
-        sessionStorage.removeItem("userToken");
-        window.location.href = "/UserAccount/Login";
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/api/Account/Logout",
+            success: function () {
+                sessionStorage.removeItem("userToken");
+                window.location.href = "/UserAccount/Login";
+            },
+            error: function (jqXhr, textStatus, errorThrown) {
+                console.log(errorThrown);
+            }
+        });
     }
 </script>

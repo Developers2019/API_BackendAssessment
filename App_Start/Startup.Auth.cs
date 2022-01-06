@@ -38,7 +38,7 @@ namespace API_BackendAssessment
                 TokenEndpointPath = new PathString("/Token"),
                 Provider = new ApplicationOAuthProvider(PublicClientId),
                 //AuthorizeEndpointPath = new PathString("/api/Account/ExternalLogin"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
+                AccessTokenExpireTimeSpan = TimeSpan.FromDays(2),
                 // In production mode set AllowInsecureHttp = false
                 AllowInsecureHttp = true
             };

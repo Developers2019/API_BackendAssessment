@@ -12,10 +12,12 @@ using System.Web;
 using System.Threading;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity.Owin;
+using System.Web.Security;
 
 namespace API_BackendAssessment.Controllers
 {
-  
+
+    [Authorize]
     [RoutePrefix("api/mail")]
     public class MailDeliveryController : ApiController
     {
@@ -28,7 +30,7 @@ namespace API_BackendAssessment.Controllers
             {
                 if (model != null)
                 {
-                    model.EmailAddressFrom = "mpucukondlazi@gmail.com";
+                    model.EmailAddressFrom = RequestContext.Principal.Identity.Name;
                     var status = EmailServices.EmailServices.SendEmail(model.EmailAddressTo, model.EmailAddressFrom, model.Subject, model.Message, new List<System.Net.Mail.Attachment>());
                     return Ok($"message sent: {Helper.YesNo(status)}");
 
@@ -87,8 +89,8 @@ namespace API_BackendAssessment.Controllers
         {
             try
             {
-                var email = "mpucukondlazi@gmail.com";
-                var emails = MailDeliveryModel.GetInboxEmails(email).Count;
+                var user = RequestContext.Principal.Identity.Name;
+                var emails = MailDeliveryModel.GetInboxEmails(user).Count;
                 return Ok(emails);
             }
             catch (Exception ex)
@@ -101,17 +103,16 @@ namespace API_BackendAssessment.Controllers
         } 
 
         [HttpGet]
+        [Authorize]
         [Route("getinboxemail")]
         public IHttpActionResult GetInboxEmail()
         {
             try
             {
                 
-                var xx = RequestContext.Principal.Identity.GetUserName();
-
-
-                var email = "mpucukondlazi@gmail.com";
-                List<EmailViewModel> emails = MailDeliveryModel.GetInboxEmails(email);
+                var user = RequestContext.Principal.Identity.Name;
+                
+                List<EmailViewModel> emails = MailDeliveryModel.GetInboxEmails(user);
 
                
                 return Ok(emails);
@@ -134,10 +135,8 @@ namespace API_BackendAssessment.Controllers
         {
             try
             {
-                //var email = "ndlazim1@ukzn.ac.za";
-                var email = "mpucukondlazi@gmail.com";
-
-                var emails = MailDeliveryModel.GetSentEmails(email);
+                var user = RequestContext.Principal.Identity.Name;
+                var emails = MailDeliveryModel.GetSentEmails(user);
                 return Ok(emails);
             }
             catch (Exception ex)
@@ -173,8 +172,9 @@ namespace API_BackendAssessment.Controllers
         {
             try
             {
-                var email = "mpucukondlazi@gmail.com";
-                var emails = MailDeliveryModel.GetTrashedEmails(email);
+                //signed in user 
+                var user = RequestContext.Principal.Identity.Name;
+                var emails = MailDeliveryModel.GetTrashedEmails(user);
                 return Ok(emails);
             }
             catch (Exception ex)
@@ -187,6 +187,7 @@ namespace API_BackendAssessment.Controllers
         }
 
         [HttpPost]
+
         [Route("sendtotrash/{id}")]
         public IHttpActionResult SendEmailToTrash(int id)
         {
@@ -215,7 +216,8 @@ namespace API_BackendAssessment.Controllers
         {
             try
             {
-                var status = MailDeliveryModel.MoveToInbox(id);
+                var user = RequestContext.Principal.Identity.Name;
+                var status = MailDeliveryModel.MoveToInbox(id, user);
                 if (status)
                 {
                     return Ok($"Moved to Inbox: {Helper.YesNo(status)}");
@@ -279,19 +281,19 @@ namespace API_BackendAssessment.Controllers
         }
 
         [HttpPost]
-        [Route("addlabel/{id}")]
+        [Route("addlabel/{id}/{labelId}")]
         public IHttpActionResult AddLabelToEmail(int id,int labelId)
         {
             try
             {
                 var status = false;
                
-                    status = MailDeliveryModel.AddLabelToEmail(id, labelId);
-                    if (status)
-                    {
-                        return Ok($"Label added to email: {Helper.YesNo(status)}");
+                status = MailDeliveryModel.AddLabelToEmail(id, labelId);
+                if (status)
+                {
+                    return Ok($"Label added to email: {Helper.YesNo(status)}");
 
-                    }
+                }
                 
                 return Ok($"Label added to email: {Helper.YesNo(status)}");
             }
@@ -305,18 +307,18 @@ namespace API_BackendAssessment.Controllers
         }
 
         [HttpPost]
-        [Route("removelabel/{id}")]
-        public IHttpActionResult RemoveLabelFromEmail(int id)
+        [Route("removelabel/{id}/{labelId}")]
+        public IHttpActionResult RemoveLabelFromEmail(int id, int labelId)
         {
             try
             {
-                var status = MailDeliveryModel.RemoveLabelFromEmail(id);
+                var status = MailDeliveryModel.RemoveLabelFromEmail(id, labelId);
                 if (status)
                 {
-                    return Ok($"Moved to trash: {Helper.YesNo(status)}");
+                    return Ok($"Label removed from email: {Helper.YesNo(status)}");
 
                 }
-                return Ok($"Moved to trash: {Helper.YesNo(status)}");
+                return Ok($"Label removed from email: {Helper.YesNo(status)}");
             }
             catch (Exception ex)
             {
@@ -333,7 +335,7 @@ namespace API_BackendAssessment.Controllers
         {
             try
             {
-                var status = MailDeliveryModel.GetEmailsByLabel(id) ?? new List<object>();
+                List<object> status = MailDeliveryModel.GetEmailsByLabel(id) ?? new List<object>();
                 if (status.Count > 0)
                 {
                     return Ok(status);

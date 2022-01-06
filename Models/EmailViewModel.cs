@@ -25,6 +25,23 @@ namespace API_BackendAssessment.Models
             {
                 return $"{Subject} - {Helper.LimitText(Message,65)}";
             } 
+        }  
+        public string SentTo 
+        { 
+            get 
+        
+            {
+                return $"To: {EmailAddressTo}";
+            } 
+        }  
+
+        public string SentFrom 
+        { 
+            get 
+        
+            {
+                return $"From: {EmailAddressFrom}";
+            } 
         } 
         public string DisplayDate { get 
             {
@@ -33,10 +50,11 @@ namespace API_BackendAssessment.Models
         } 
 
         public string HTMLBody { get 
-            {
+        {
                 return Helper.ConvertToHTML(Message);
             } 
         }
+        public string LabelName { get; set; }
         public string EmailAddressFrom { get; set; }
         public string Url { get; set; }
         public bool? Status { get; set; }

@@ -1,4 +1,6 @@
-﻿function AddUser() {
+﻿
+
+function AddUser() {
 
     $.ajax({
         type: 'POST',

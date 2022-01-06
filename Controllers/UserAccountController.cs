@@ -18,5 +18,10 @@ namespace API_BackendAssessment.Controllers
         {
             return View();
         }
+
+        public ActionResult RecoverPassword()
+        {
+            return View();
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿$.ajaxSetup({
     'beforeSend': function (xhr) {
-        if (localStorage.getItem("userToken")) {
+        if (sessionStorage.getItem("userToken")) {
             xhr.setRequestHeader("Authorization", "Bearer " + sessionStorage.getItem("userToken"));
         }
     }

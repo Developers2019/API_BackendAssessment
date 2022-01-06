@@ -30,5 +30,9 @@ namespace API_BackendAssessment.Models.DataAccess
         public virtual DbSet<Folder> Folders { get; set; }
         public virtual DbSet<Label> Labels { get; set; }
         public virtual DbSet<SmtpDetail> SmtpDetails { get; set; }
+        public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+        public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
+        public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
     }
 }
